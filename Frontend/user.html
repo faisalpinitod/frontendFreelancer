@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+
+
+
+        nav{
+            width:100%;
+            display: flex;
+            justify-content: space-evenly;
+            margin:auto;
+            padding:15px;
+            box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+            margin-bottom: 30px;
+        }
+
+        nav>button{
+            padding:15px;
+            border-radius:8px;
+            border: 0px;
+            background-color: rgb(127, 242, 255);
+            /* color: white; */
+            font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif ;
+            font-size: 18px;
+        }
+        /* #userSec{
+            width:100%;
+            margin: auto;
+        } */
+        form{
+            width:25%;
+            margin: auto;
+            box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+            padding: 30px;
+            border-radius: 10px;
+        }
+        form>input{
+            width:90%;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+        form>select,#submit{
+            width:96%;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+        
+    </style>
+</head>
+<nav>
+    <button id="home">Home Page</button>
+</nav>
+<body>
+    <div id="userSec">
+        <form action="">
+            <input type="text" id="name" placeholder="Name">
+            <input type="text" id="profile" placeholder="Profile Picture">
+            <input type="email" id="email" placeholder="email">
+            <input type="password" id="password" placeholder="password">
+            <select name="" id="profession">
+                <option value="">Profession</option>
+                <option value="Web Developer">Web Developer</option>
+                <option value="Graphic Designer">Graphic Designer</option>
+            </select>
+            <input type="text" id="skills" placeholder="Skills" multiple>
+            <input type="number" id="rate" placeholder="Hourly Rate">
+            <input type="submit" id="submit" placeholder="Submit">
+        </form>
+    </div> 
+</body>
+</html>
+<script>
+    document.querySelector("form").addEventListener("submit", register)
+
+  function register(e){
+
+    e.preventDefault()
+        let name=document.querySelector("#name").value
+        let profile_picture=document.querySelector("#profile").value
+        let email=document.querySelector("#email").value
+        let password=document.querySelector("#password").value
+        let profession=document.querySelector("#profession").value
+        let skills=document.querySelector("#skills").value
+        let hourly_rate=document.querySelector("#rate").value
+        let isBooked=false
+
+        skills=skills.split(",")
+
+        let newobj={name,email,password,profession,skills,hourly_rate,profile_picture,isBooked}
+
+        console.log(newobj)
+
+        document.querySelector("form").addEventListener("submit", registerFreelancer(newobj))
+
+    }
+
+    async function registerFreelancer(newobj){
+        try{
+            let user=await fetch("https://drab-lime-coyote-wrap.cyclic.app/freelancers",{
+                method:"POST",
+                headers:{
+                    "Content-Type":"application/json"
+                },
+                body:JSON.stringify(newobj)
+            })
+
+            if(user.ok){
+                alert("Registration Successful")
+            }
+
+
+        }catch(err){
+            alert("Bad request")
+        }
+
+        
+    }
+
+    document.querySelector("#home").addEventListener("click",myfunc)
+    function myfunc(){
+        window.location=("./index.html")
+    }
+
+</script>

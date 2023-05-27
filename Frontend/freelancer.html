@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+           nav{
+            width:100%;
+            display: flex;
+            justify-content: space-evenly;
+            margin:auto;
+            padding:15px;
+            box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+            margin-bottom: 30px;
+        }
+
+        nav>button{
+            padding:15px;
+            border-radius:8px;
+            border: 0px;
+            background-color: rgb(127, 242, 255);
+            /* color: white; */
+            font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif ;
+            font-size: 18px;
+        }
+        form{
+            width:25%;
+            margin: auto;
+            box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+            padding: 30px;
+            border-radius: 10px;
+        }
+        form>input{
+            width:90%;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+        form>#submit{
+            width:96%;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+
+        #main{
+            width:70%;
+            margin: auto;
+            display:grid;
+            grid-template-columns: repeat(2,2fr);
+            /* border: 1px solid red; */
+        }
+        #main>div{
+            width:70%;
+            margin: auto;
+            box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+            padding: 10px;
+            /* margin-left: 30px; */
+            /* border: 1px solid red; */
+            margin-bottom: 15px;
+          
+
+        }
+        #cont>p,h3,button{
+            margin-left:40px;
+
+        }
+        #cont>button{
+            width:100px;
+            padding:10px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <button id="login">Login Page</button>
+        <button id="freelancer">Freelancers Page</button>
+        <button id="report">Reports Page</button>
+    </nav>
+
+    <div id="main">
+       
+    </div>
+</body>
+</html>
+<script>
+    
+    document.querySelector("#login").addEventListener("click",myfunc1)
+    function myfunc1(){
+        window.location=("./admin.html")
+    }
+    document.querySelector("#freelancer").addEventListener("click",myfunc2)
+    function myfunc2(){
+        window.location=("./freelancer.html")
+    }
+    document.querySelector("#report").addEventListener("click",myfunc3)
+    function myfunc3(){
+        window.location=("./reports.html")
+    }
+
+    card()
+
+    async function card(){
+        try{
+            let user=await fetch("https://drab-lime-coyote-wrap.cyclic.app/freelancers",{
+                method:"GET",
+                headers:{
+                    "Content-Type":"application/json"
+                }   
+            })
+
+            let card= await user.json()
+            let bag=card
+            displayCard(bag)
+           
+
+
+        }catch(err){
+            alert("Bad request")
+        }
+
+        
+    }
+
+    // console.log(bag)
+
+    let main=document.querySelector("#main")
+
+    function displayCard(card){
+
+      
+        main.innerHTML=""
+
+        let newarr=card.map((ele)=>{
+            return`<div id="cont">
+                    <img width="100%" src=${ele.profile_picture} alt="image">
+                    <h3>${ele.name}</h3>
+                    <p>Email : ${ele.email} </p>
+                    <p>Profession :${ele.profession}</p>
+                    <p>Skills : ${ele.skills}</p>
+                    <p>Hourly Rate : ${ele.hourly_rate}</p>
+                    <p>Booking Status : ${ele.isBooked}</p>
+                    <button id="edit">Edit</button>
+                    <button id="delete" data-id=${ele.id}>Delete</button>
+                    <button id='hire'>HIRE ME</button>
+                </div>`
+                
+ 
+        })
+
+        main.innerHTML=newarr.join(" ")
+
+
+    }
+
+
+
+    let deletebtns=document.querySelectorAll("#delete")
+    for(let i of deletebtns){
+        i.addEventListener("click",((e)=>{
+            let id=e.target.dataset
+            console.log(id)
+            deleteFunc(id)
+        }))
+    }
+    async function deleteFunc(id){
+        try{
+            let user=await fetch(`https://drab-lime-coyote-wrap.cyclic.app/freelancers/${id}`,{
+                method:"DELETE",
+                headers:{
+                    "Content-Type":"application/json"
+                }
+            })
+
+            if(user.ok){
+                alert("Delete Successful")
+            }
+
+
+        }catch(err){
+            alert("Bad request")
+        }
+    }
+
+
+</script>
